@@ -1,0 +1,81 @@
+.tray {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 26px 12px 18px;
+  min-height: 140px;
+  justify-content: flex-end;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(65% 22px at 50% calc(100% - 12px), rgba(34, 32, 26, 0.16), transparent 70%),
+    var(--color-surface-alt);
+}
+
+.traySm {
+  padding: 14px 8px 10px;
+  min-height: 96px;
+}
+
+.layer,
+.layerStatic {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  line-height: 0;
+}
+
+.layer {
+  cursor: pointer;
+  transition: transform var(--transition-fast), filter var(--transition-fast);
+}
+
+/* Layers overlap like a real stack. */
+.layer:not(:first-child),
+.layerStatic:not(:first-child) {
+  margin-top: -14px;
+}
+
+.traySm .layer:not(:first-child),
+.traySm .layerStatic:not(:first-child) {
+  margin-top: -10px;
+}
+
+.layer:hover {
+  transform: translateX(6px) rotate(-1.5deg);
+  filter: drop-shadow(0 4px 8px rgba(200, 55, 31, 0.35));
+}
+
+.image {
+  height: 34px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 2px rgba(34, 32, 26, 0.18));
+}
+
+.traySm .image {
+  height: 24px;
+  max-width: 160px;
+}
+
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 32px 20px;
+  border: 1.5px dashed var(--color-line);
+  border-radius: var(--radius-lg);
+  color: var(--color-ink-soft);
+  font-size: 13px;
+  text-align: center;
+  background: var(--color-surface-alt);
+}
+
+.empty span {
+  font-size: 26px;
+}
+
+.emptySm {
+  padding: 18px 12px;
+}
