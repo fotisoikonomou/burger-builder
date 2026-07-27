@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useBurgers } from '../../context/BurgersContext';
 import { IngredientPicker } from '../ingredients/IngredientPicker';
 import { BurgerStack } from './BurgerStack';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
+import { canAddIngredient } from '../../utils/ingredientRules';
 import type { Burger, Ingredient } from '../../types';
 import styles from './BurgerEditor.module.css';
 
@@ -17,20 +18,20 @@ interface BurgerEditorProps {
 /**
  * Edit mode for a single burger:
  * - pantry on the left (click to add, in order),
- * - live stack in the middle (click a layer to remove it),
- * - build order ticket on the right (move up / move down / delete).
+ * - live stack on the right (click a layer to remove it).
  */
 export function BurgerEditor({ burger, ingredients, ingredientsById, onClose }: BurgerEditorProps) {
   const { dispatch } = useBurgers();
   const [name, setName] = useState(burger.name);
 
-  const counts = useMemo(() => {
-    const map = new Map<number, number>();
-    for (const item of burger.items) {
-      map.set(item.ingredientId, (map.get(item.ingredientId) ?? 0) + 1);
-    }
-    return map;
-  }, [burger.items]);
+  const counts = new Map<number, number>();
+  for (const item of burger.items) {
+    counts.set(item.ingredientId, (counts.get(item.ingredientId) ?? 0) + 1);
+  }
+
+  const maxedOutIds = new Set(
+    ingredients.filter((i) => !canAddIngredient(i.id, counts)).map((i) => i.id),
+  );
 
   const commitName = () => {
     if (name.trim() && name.trim() !== burger.name) {
@@ -65,9 +66,11 @@ export function BurgerEditor({ burger, ingredients, ingredientsById, onClose }: 
           <IngredientPicker
             ingredients={ingredients}
             counts={counts}
-            onPick={(ingredient) =>
-              dispatch({ type: 'item/add', burgerId: burger.id, ingredientId: ingredient.id })
-            }
+            disabledIds={maxedOutIds}
+            onPick={(ingredient) => {
+              if (maxedOutIds.has(ingredient.id)) return;
+              dispatch({ type: 'item/add', burgerId: burger.id, ingredientId: ingredient.id });
+            }}
           />
         </section>
 
@@ -81,74 +84,6 @@ export function BurgerEditor({ burger, ingredients, ingredientsById, onClose }: 
               dispatch({ type: 'item/remove', burgerId: burger.id, itemUid })
             }
           />
-        </section>
-
-        <section className={styles.ticket} aria-label="Build order">
-          <h3 className={styles.sectionTitle}>Build order</h3>
-          <p className={styles.hint}>Bottom layer first — reorder or delete.</p>
-          {burger.items.length === 0 ? (
-            <p className={styles.ticketEmpty}>The ticket is empty.</p>
-          ) : (
-            <ol className={styles.ticketList}>
-              {burger.items.map((item, index) => {
-                const ingredient = ingredientsById.get(item.ingredientId);
-                if (!ingredient) return null;
-                return (
-                  <li key={item.uid} className={styles.ticketRow}>
-                    <span className={styles.ticketIndex}>{index + 1}</span>
-                    <span className={styles.ticketName}>{ingredient.name}</span>
-                    <span className={styles.ticketActions}>
-                      <button
-                        type="button"
-                        className={styles.iconButton}
-                        disabled={index === 0}
-                        onClick={() =>
-                          dispatch({
-                            type: 'item/move',
-                            burgerId: burger.id,
-                            itemUid: item.uid,
-                            direction: 'up',
-                          })
-                        }
-                        aria-label={`Move ${ingredient.name} down the stack`}
-                        title="Move earlier (lower in the burger)"
-                      >
-                        ↑
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.iconButton}
-                        disabled={index === burger.items.length - 1}
-                        onClick={() =>
-                          dispatch({
-                            type: 'item/move',
-                            burgerId: burger.id,
-                            itemUid: item.uid,
-                            direction: 'down',
-                          })
-                        }
-                        aria-label={`Move ${ingredient.name} up the stack`}
-                        title="Move later (higher in the burger)"
-                      >
-                        ↓
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles.iconButton} ${styles.iconDanger}`}
-                        onClick={() =>
-                          dispatch({ type: 'item/remove', burgerId: burger.id, itemUid: item.uid })
-                        }
-                        aria-label={`Delete ${ingredient.name}`}
-                        title="Delete"
-                      >
-                        ✕
-                      </button>
-                    </span>
-                  </li>
-                );
-              })}
-            </ol>
-          )}
         </section>
       </div>
 

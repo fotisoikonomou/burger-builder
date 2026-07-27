@@ -26,7 +26,7 @@ export function BurgerViewModal({ burger, ingredientsById, onClose }: BurgerView
           ) : null;
         })}
       </ol>
-      <p className={styles.caption}>Stacked bottom → top, in the order the ingredients were added.</p>
+     
     </Modal>
   );
 }

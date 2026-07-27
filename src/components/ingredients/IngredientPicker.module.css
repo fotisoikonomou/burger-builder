@@ -24,14 +24,19 @@
     box-shadow var(--transition-fast);
 }
 
-.card:hover {
+.card:hover:not(:disabled) {
   transform: translateY(-2px);
   border-color: var(--color-mustard);
   box-shadow: var(--shadow-card);
 }
 
-.card:hover .plus {
+.card:hover:not(:disabled) .plus {
   opacity: 1;
+}
+
+.card:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .image {
