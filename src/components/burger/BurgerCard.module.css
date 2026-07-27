@@ -39,6 +39,13 @@
 
 .preview {
   flex: 1;
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  transition: opacity var(--transition-fast);
+}
+
+.preview:hover {
+  opacity: 0.85;
 }
 
 .actions {

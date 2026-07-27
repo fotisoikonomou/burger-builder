@@ -14,7 +14,7 @@ export function BuilderPage() {
       <header className={styles.topbar}>
         <div className={styles.brand}>
           <span aria-hidden="true">🍔</span>
-          <span className={styles.brandName}>Burger Builder</span>
+          <span className={styles.brandName}>Burger Builder - Fotis Oikonomou</span>
         </div>
         <Button variant="ghost" size="sm" onClick={() => logout()}>
           Log out

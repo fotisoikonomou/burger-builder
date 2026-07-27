@@ -29,7 +29,19 @@ export function BurgerCard({ burger, ingredientsById, onEdit, onView }: BurgerCa
         </span>
       </header>
 
-      <div className={styles.preview}>
+      <div
+        className={styles.preview}
+        role="button"
+        tabIndex={0}
+        onClick={onEdit}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onEdit();
+          }
+        }}
+        aria-label={`Edit ${burger.name}`}
+      >
         <BurgerStack items={burger.items} ingredientsById={ingredientsById} size="sm" />
       </div>
 
