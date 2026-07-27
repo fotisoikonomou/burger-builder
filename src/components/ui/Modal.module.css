@@ -1,0 +1,74 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(24, 22, 18, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+  animation: fade-in 160ms ease;
+}
+
+.dialog {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-pop);
+  width: min(520px, 100%);
+  max-height: min(86vh, 900px);
+  display: flex;
+  flex-direction: column;
+  animation: rise-in 180ms ease;
+}
+
+.lg {
+  width: min(980px, 100%);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px 12px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.close {
+  border: 0;
+  background: transparent;
+  font-size: 15px;
+  line-height: 1;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--color-ink-soft);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.close:hover {
+  background: rgba(34, 32, 26, 0.07);
+  color: var(--color-ink);
+}
+
+.content {
+  padding: 4px 22px 22px;
+  overflow-y: auto;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+}
