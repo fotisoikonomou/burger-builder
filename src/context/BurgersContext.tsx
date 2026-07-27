@@ -22,8 +22,7 @@ export type BurgersAction =
   | { type: 'burger/duplicate'; burgerId: string }
   | { type: 'burger/rename'; burgerId: string; name: string }
   | { type: 'item/add'; burgerId: string; ingredientId: number }
-  | { type: 'item/remove'; burgerId: string; itemUid: string }
-  | { type: 'item/move'; burgerId: string; itemUid: string; direction: 'up' | 'down' };
+  | { type: 'item/remove'; burgerId: string; itemUid: string };
 
 function updateBurger(
   state: Burger[],
@@ -89,16 +88,6 @@ export function burgersReducer(state: Burger[], action: BurgersAction): Burger[]
         ...burger,
         items: burger.items.filter((item) => item.uid !== action.itemUid),
       }));
-
-    case 'item/move':
-      return updateBurger(state, action.burgerId, (burger) => {
-        const from = burger.items.findIndex((item) => item.uid === action.itemUid);
-        const to = action.direction === 'up' ? from - 1 : from + 1;
-        if (from === -1 || to < 0 || to >= burger.items.length) return burger;
-        const items = [...burger.items];
-        [items[from], items[to]] = [items[to], items[from]];
-        return { ...burger, items };
-      });
 
     default:
       return state;
