@@ -20,7 +20,7 @@ Other scripts: `npm run build` (type-check + production build), `npm run preview
 - **Login** — POSTs to `/login`, stores the JWT and sends it as a `Bearer` token on `/ingredients`.
 - **Token expiry** — the API token lives for 10 minutes; the app tracks the TTL and logs the user out automatically with a friendly message (a `401` from the API triggers the same path).
 - **Ingredient list** — fetched from the API, with loading, error and retry states. Images come from the API image host.
-- **Ordered stacking** — clicking an ingredient adds one instance to the burger; the same ingredient can be added any number of times, and layers appear in exactly the order they were added (first pick = bottom layer).
+- **Ordered stacking** — clicking an ingredient adds one instance to the burger; layers appear in exactly the order they were added (first pick = bottom layer). Each ingredient is capped at 4 instances per burger — a realistic stacking limit — and its pantry button disables once maxed out.
 - **Click to remove** — clicking a layer inside the visual burger removes that specific instance.
 - **Live visual** — the burger is rendered as a stacked composition of the API images.
 
@@ -53,7 +53,8 @@ src/
 │   └── burger/      # BurgerStack, BurgerCard, BurgerGrid, BurgerEditor, BurgerViewModal
 ├── pages/           # LoginPage, BuilderPage
 ├── styles/          # global.css: design tokens + reset + a11y floor
-└── types/           # shared domain types
+├── types/           # shared domain types
+└── utils/           # ingredientRules.ts: per-ingredient stacking cap
 ```
 
 ### Decisions worth calling out
